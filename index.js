@@ -122,10 +122,11 @@ function createQuestions(config) {
       filter: (subject, answers) => formatHead({ ...answers, subject }, config)
     },
     {
-      type: 'input',
+      type: 'list',
       name: 'breakingBody',
+      choices: config.reqs && [{ name: '[none]', value: '' }].concat(config.reqs),
       message:
-        'A BREAKING CHANGE commit requires a body. Please enter a longer description of the commit itself:\n',
+        'Requirements :\n',
       when: !config.skipQuestions.includes('breaking')
     },
     {
@@ -154,7 +155,7 @@ function format(answers) {
   const head = `${truncate(answers.subject, columns)} ${answers.issues.length !== 0 ? ", " + answers.issues.split(' ').join(', ') : ''}`
   const breaking =
     answers.breakingBody && answers.breakingBody.trim().length !== 0
-      ? wrap(`🚨 breaks: ${answers.breakingBody.trim()}`, columns)
+      ? wrap(`🔒 requires: ${answers.breakingBody.trim()}`, columns)
       : ''
   const footer = formatIssues(answers.issues)
 
