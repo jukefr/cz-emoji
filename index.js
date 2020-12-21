@@ -26,10 +26,10 @@ function loadConfigUpwards(filename) {
 async function getConfig() {
   const defaultConfig = {
     types,
-    symbol: false,
+    symbol: true,
     skipQuestions: [''],
     subjectMaxLength: 75,
-    conventional: false
+    conventional: true
   }
 
   const config =
@@ -69,7 +69,7 @@ function formatHead({ type, scope, subject }, config) {
 }
 
 function formatIssues(issues) {
-  return issues ? 'Closes ' + (issues.match(/#\d+/g) || []).join(', closes ') : ''
+  return issues ? 'Closes ' + (issues.split(' ') || []).join(', closes ') : ''
 }
 
 /**
@@ -160,11 +160,11 @@ function createQuestions(config) {
 function format(answers) {
   const { columns } = process.stdout
 
-  const head = truncate(answers.subject, columns)
+  const head = `${truncate(answers.subject, columns)} ${answers.issues.length !== 0 ? ", " + answers.issues.split(' ').join(', ') : ''}`
   const body = wrap(answers.body || '', columns)
   const breaking =
     answers.breakingBody && answers.breakingBody.trim().length !== 0
-      ? wrap(`BREAKING CHANGE: ${answers.breakingBody.trim()}`, columns)
+      ? wrap(`🚨 breaks: ${answers.breakingBody.trim()}`, columns)
       : ''
   const footer = formatIssues(answers.issues)
 
