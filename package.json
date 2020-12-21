@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "cli-truncate": "^1.0.0",
+    "external-editor": "^3.1.0",
     "find-up": "^5.0.0",
     "fuse.js": "^3.4.5",
     "homedir": "^0.6.0",

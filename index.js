@@ -7,7 +7,7 @@ const pad = require('pad')
 const path = require('path')
 const fuse = require('fuse.js')
 const util = require('util')
-
+const {edit} = require("external-editor")
 const readFile = util.promisify(fs.readFile)
 
 const types = require('./lib/types')
@@ -123,15 +123,6 @@ function createQuestions(config) {
     },
     {
       type: 'input',
-      name: 'body',
-      message:
-        config.questions && config.questions.body
-          ? config.questions.body
-          : 'Provide a longer description:',
-      when: !config.skipQuestions.includes('body')
-    },
-    {
-      type: 'input',
       name: 'breakingBody',
       message:
         'A BREAKING CHANGE commit requires a body. Please enter a longer description of the commit itself:\n',
@@ -161,12 +152,13 @@ function format(answers) {
   const { columns } = process.stdout
 
   const head = `${truncate(answers.subject, columns)} ${answers.issues.length !== 0 ? ", " + answers.issues.split(' ').join(', ') : ''}`
-  const body = wrap(answers.body || '', columns)
   const breaking =
     answers.breakingBody && answers.breakingBody.trim().length !== 0
       ? wrap(`🚨 breaks: ${answers.breakingBody.trim()}`, columns)
       : ''
   const footer = formatIssues(answers.issues)
+
+  const body = edit('')
 
   return [head, body, breaking, footer]
     .filter(Boolean)
