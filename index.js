@@ -159,12 +159,12 @@ function format(answers) {
       : ''
   const footer = formatIssues(answers.issues)
 
-  const body = edit('')
-
-  return [head, body, breaking, footer]
+  const body = [head, breaking, footer]
     .filter(Boolean)
     .join('\n\n')
     .trim()
+
+  return edit(body)
 }
 
 /**
